@@ -4,6 +4,8 @@ import { Form, Input, DatePicker, Select } from 'antd';
 import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import { setNewTask } from '../../redux/actions/todoListActions';
+import { setModalHidden } from '../../redux/actions/modalActions';
+import { SET_MODAL_HIDDEN } from '../../redux/types/modalTypes';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -15,6 +17,7 @@ export default function CreateNewTask() {
 		const data = { ...values, dueDate: values.dueDate._d, id: Date.now() };
 		formRef.current.resetFields();
 		dispatch(setNewTask(data));
+		dispatch(setModalHidden(SET_MODAL_HIDDEN))
 	};
 
 	return (
@@ -56,7 +59,7 @@ export default function CreateNewTask() {
 				>
 					<TextArea rows={8} />
 				</Form.Item>
-				<div className="grid grid-cols-2 gap-8">
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-0 md:gap-4">
 					<Form.Item
 						name="dueDate"
 						label={<span className="font-semibold">Due Date</span>}

@@ -9,6 +9,9 @@ import {
 	updateTask,
 } from '../../redux/actions/todoListActions';
 import moment from 'moment';
+import { setFormAddTask } from '../../redux/actions/modalActions';
+import CreateNewTask from '../createTask/CreateNewTask'
+import { SET_MODAL_VISIABLE } from '../../redux/types/modalTypes';
 let checkArr = [];
 const { Option } = Select;
 const { TextArea } = Input;
@@ -65,6 +68,10 @@ export default function TodoListComponent() {
 		setTaskDetail({});
 	};
 
+	const handleClickAddForm = ()=>{
+		dispatch(setFormAddTask(SET_MODAL_VISIABLE, <CreateNewTask />))
+	}
+
 	useEffect(() => {
 		dispatch(getTasksRender(''));
 	}, []);
@@ -73,8 +80,9 @@ export default function TodoListComponent() {
 			<div>
 				<h2 className="font-bold text-lg">To Do List</h2>
 			</div>
-			<div className="mb-6">
-				<Input onChange={handleSearch} placeholder="Search..." />
+			<div className="mb-6 grid grid-cols-6 md:grid-cols-1 items-center gap-2 md:gap-0">
+				<div className="col-span-5 md:col-span-1"><Input onChange={handleSearch} placeholder="Search..." /></div>
+				<button onClick={()=>{handleClickAddForm()}} className={styles.btnUpdate + ' md:hidden'}>Add</button>
 			</div>
 			<ul className={styles.listTodo}>
 				{listTaskRender

@@ -1,4 +1,4 @@
-import { DELETE_TASK, DELETE_TASKS_CHECK, GET_TASKS_RENDER, SET_NEW_TASK, TO_DO_LIST_LOCAL, UPDATE_TASK } from "../types/todiListType";
+import { DELETE_TASK, DELETE_TASKS_CHECK, GET_TASKS_RENDER, SET_NEW_TASK, UPDATE_TASK } from "../types/todiListType";
 
 const todoList = {
     todoList : [],
