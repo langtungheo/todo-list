@@ -11,7 +11,6 @@ const modalReducers = (state = modal, action) => {
     case SET_MODAL_VISIABLE:
         state.visiable = true;
         state.Component = action.Component;
-        console.log('load')
         return { ...state}
     case SET_MODAL_HIDDEN:
         state.visiable = false;
