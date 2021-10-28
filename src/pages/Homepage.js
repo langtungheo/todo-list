@@ -1,6 +1,6 @@
 import React from 'react'
 import CreateNewTask from '../components/createTask/CreateNewTask'
-import TodoListComponent from '../components/todoList/TodoListComponent'
+import TodoList from '../components/todoList/TodoList'
 
 export default function Homepage() {
     return (
@@ -9,7 +9,7 @@ export default function Homepage() {
                 <CreateNewTask />
             </div>
             <div className="md:col-span-3  p-3 overflow-hidden h-screen">
-                <TodoListComponent />
+                <TodoList />
             </div>
             
         </div>

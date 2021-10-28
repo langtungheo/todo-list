@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { setNewTask } from '../../redux/actions/todoListActions';
 import { setModalHidden } from '../../redux/actions/modalActions';
 import { SET_MODAL_HIDDEN } from '../../redux/types/modalTypes';
+import { piority } from '../../utils/globalConst';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -14,12 +15,13 @@ export default function CreateNewTask() {
 	const formRef = useRef();
 	const dispatch = useDispatch();
 	const onFinished = (values) => {
-		const data = { ...values, dueDate: values.dueDate._d, id: Date.now() };
+		const data = { ...values, dueDate: moment(values.dueDate._d).toJSON(), id: Date.now() };
 		formRef.current.resetFields();
 		dispatch(setNewTask(data));
 		dispatch(setModalHidden(SET_MODAL_HIDDEN))
 	};
 
+	
 	return (
 		<div className="py-5 px-10 text-center bg-white w-full rounded-md shadow-md">
 			<div>
@@ -40,7 +42,7 @@ export default function CreateNewTask() {
 						}),
 					]}
 				>
-					<Input placeholder={'Add new task ...'} />
+					<Input maxLength={15} placeholder={'Add new task ...'} />
 				</Form.Item>
 				<Form.Item
 					label={<span className="font-semibold">Description</span>}
@@ -63,7 +65,7 @@ export default function CreateNewTask() {
 					<Form.Item
 						name="dueDate"
 						label={<span className="font-semibold">Due Date</span>}
-						initialValue={moment(new Date(), 'DD-MM-YYYY')}
+						initialValue={moment(new Date(), 'YYYY-MM-DD')}
 						rules={[
 							() => ({
 								validator(_, value) {
@@ -77,15 +79,15 @@ export default function CreateNewTask() {
 									}
 
 									return Promise.reject(
-										new Error('selected a date in the past !')
+										new Error('Selected a date in the past !')
 									);
 								},
 							}),
 						]}
 					>
 						<DatePicker
-							defaultValue={moment(new Date(), 'DD-MM-YYYY')}
 							className="w-full"
+							format={'DD-MM-YYYY'}
 						/>
 					</Form.Item>
 					<Form.Item
@@ -93,10 +95,10 @@ export default function CreateNewTask() {
 						name="piority"
 						initialValue="normal"
 					>
-						<Select defaultValue={'nomnal'}>
-							<Option value="low">low</Option>
-							<Option value="normal">normal</Option>
-							<Option value="hight">hight</Option>
+						<Select >
+							{piority.map((piority, index)=>{
+								return <Option key={index} value={piority.value}>{piority.name}</Option>
+							})}
 						</Select>
 					</Form.Item>
 				</div>

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import styles from './TodoComponent.module.css';
+import styles from './TodoList.module.css';
 import { Input, Checkbox, Popconfirm, Form, Select, DatePicker } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -8,6 +8,7 @@ import {
 	getTasksRender,
 	updateTask,
 } from '../../redux/actions/todoListActions';
+import {piority} from '../../utils/globalConst' 
 import moment from 'moment';
 import { setFormAddTask } from '../../redux/actions/modalActions';
 import CreateNewTask from '../createTask/CreateNewTask'
@@ -23,14 +24,17 @@ export default function TodoListComponent() {
 	const checkRef = useRef(false);
 	const searchRef = useRef('');
 	const text = 'Are you sure to delete this task?';
-	const { listTaskRender } = useSelector((state) => state.todoList);
-	listTaskRender.sort(
+	const { listTaskRender  } = useSelector((state) => state.todoList);
+	listTaskRender && listTaskRender.sort(
 		(first, last) => Date.parse(first.dueDate) - Date.parse(last.dueDate)
 	);
+
 	const dispatch = useDispatch();
 	const handleClick = (id) => {
 		dispatch(deleteTask(id));
 	};
+	
+	//Ham xu ly check box
 	const handleChangeCheckBox = (e, id) => {
 		const index = checkArr.findIndex((todo) => todo.id === id);
 		if (index === -1 && e.target.checked) {
@@ -46,6 +50,8 @@ export default function TodoListComponent() {
 		});
 		setChecked(arrSetCheck);
 	};
+
+	// Ham xu ly xoa hang loat task
 	const handleRemoveCheck = () => {
 		const taskArrRemove = checkArr.filter((todo) => todo.status === true);
 		dispatch(deleteTasksCheck(taskArrRemove));
@@ -53,6 +59,7 @@ export default function TodoListComponent() {
 		checkArr = [];
 	};
 
+	// Ham xu ly debounce search
 	const handleSearch = (e) => {
 		if (searchRef.current) {
 			clearTimeout(searchRef.current);
@@ -62,12 +69,14 @@ export default function TodoListComponent() {
 		}, 500);
 	};
 
+	//Ham xu ly update task
 	const handleUpdateTask = (values) => {
-		values = { ...values, dueDate: values.dueDate._d };
+		values = { ...values, dueDate: moment(values.dueDate._d).toJSON()};
 		dispatch(updateTask(taskDetail.id, values));
 		setTaskDetail({});
 	};
 
+	// Ham xu ly mo modal Add Task man hinh di dong
 	const handleClickAddForm = ()=>{
 		dispatch(setFormAddTask(SET_MODAL_VISIABLE, <CreateNewTask />))
 	}
@@ -132,12 +141,12 @@ export default function TodoListComponent() {
 													rules={[
 														{
 															required: true,
-															message: 'please input task name',
+															message: 'Please input task name',
 														},
 													]}
 													initialValue={taskDetail.taskName}
 												>
-													<Input />
+													<Input maxLength={15}/>
 												</Form.Item>
 												<Form.Item
 													label={
@@ -148,11 +157,11 @@ export default function TodoListComponent() {
 													rules={[
 														{
 															required: true,
-															message: 'please input desctiption',
+															message: 'Please input desctiption',
 														},
 													]}
 												>
-													<TextArea rows={8} />
+													<TextArea rows={4} />
 												</Form.Item>
 												<div className="grid grid-cols-2 gap-8">
 													<Form.Item
@@ -161,8 +170,8 @@ export default function TodoListComponent() {
 															<span className="font-semibold">Due Date</span>
 														}
 														initialValue={moment(
-															taskDetail.dueDate,
-															'DD-MM-YYYY'
+															(new Date(taskDetail.dueDate)),
+															'YYYY-MM-DD'
 														)}
 														rules={[
 															() => ({
@@ -178,15 +187,15 @@ export default function TodoListComponent() {
 																	}
 
 																	return Promise.reject(
-																		new Error('selected a date in the past !')
+																		new Error('Selected a date in the past !')
 																	);
 																},
 															}),
 														]}
 													>
 														<DatePicker
-															defaultValue={moment(new Date(), 'DD-MM-YYYY')}
 															className="w-full"
+															format={'DD-MM-YYYY'}
 														/>
 													</Form.Item>
 													<Form.Item
@@ -194,12 +203,12 @@ export default function TodoListComponent() {
 															<span className="font-semibold">Piority</span>
 														}
 														name="pioryti"
-														initialValue="normal"
+														initialValue={todo.piority}
 													>
-														<Select defaultValue={'nomnal'}>
-															<Option value="low">low</Option>
-															<Option value="normal">normal</Option>
-															<Option value="hight">hight</Option>
+														<Select>
+															{piority.map((piority, index)=>{
+																return <Option key={index} value={piority.value}>{piority.name}</Option>
+															})}	
 														</Select>
 													</Form.Item>
 												</div>

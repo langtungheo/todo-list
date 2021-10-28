@@ -1,7 +1,7 @@
-import { DELETE_TASK, DELETE_TASKS_CHECK, GET_TASKS_RENDER, SET_NEW_TASK, UPDATE_TASK } from "../types/todiListType";
+import { DELETE_TASK, DELETE_TASKS_CHECK, GET_TASKS_RENDER, SET_NEW_TASK, TO_DO_LIST_LOCAL, UPDATE_TASK } from "../types/todiListType";
 
 const todoList = {
-    todoList : [],
+    todoList : JSON.parse(localStorage.getItem(TO_DO_LIST_LOCAL)) || [],
     listTaskRender : []
 }
 
@@ -11,10 +11,12 @@ const todoReducers = (state = todoList, action) => {
     case SET_NEW_TASK:
         state.todoList.push(action.task);
         state.listTaskRender = state.todoList
+        localStorage.setItem(TO_DO_LIST_LOCAL, JSON.stringify(state.todoList))
         return { ...state}
     case DELETE_TASK:
         state.todoList = state.todoList.filter(todo => todo.id !== action.id)
         state.listTaskRender = state.todoList
+        localStorage.setItem(TO_DO_LIST_LOCAL, JSON.stringify(state.todoList))
         return {...state}
     case DELETE_TASKS_CHECK :
         const {tasks} = action;
@@ -22,6 +24,7 @@ const todoReducers = (state = todoList, action) => {
             state.todoList = state.todoList.filter(todo => todo.id !== task.id)
             state.listTaskRender = state.todoList
         }
+        localStorage.setItem(TO_DO_LIST_LOCAL, JSON.stringify(state.todoList))
         return { ...state}
     case GET_TASKS_RENDER:
         const {key} = action;
@@ -36,6 +39,7 @@ const todoReducers = (state = todoList, action) => {
         const index = state.todoList.findIndex(task => task.id === action.id);
         state.todoList[index] = {...state.todoList[index], ...action.task}
         state.listTaskRender = state.todoList;
+        localStorage.setItem(TO_DO_LIST_LOCAL, JSON.stringify(state.todoList))
         return { ...state}
     default:
         return state

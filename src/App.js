@@ -1,11 +1,11 @@
 import './App.css';
-import ModalHOC from './HOC/ModalHOC';
+import HOCModal from './HOC/HOCModal';
 import Homepage from './pages/Homepage';
 
 function App() {
   return (
     <div className="appBody">
-      <ModalHOC />
+      <HOCModal />
       <Homepage />
     </div>
   );
